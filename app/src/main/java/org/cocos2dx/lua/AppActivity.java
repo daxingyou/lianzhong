@@ -33,15 +33,21 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.joy.numerouschain.R;
 
 public class AppActivity extends Cocos2dxActivity{
     public static final String TAG = "Cocos2dxActivity";
     private static AppActivity mContext;
     private static double NavigationBarHeight = 0.0d;
+    private long mLastBackTime = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class AppActivity extends Cocos2dxActivity{
     protected void onDestroy() {
         super.onDestroy();
         mContext = null;
+        System.exit(0);
     }
 
     public static boolean hasNavigationBar(Activity activity) {
@@ -117,5 +124,27 @@ public class AppActivity extends Cocos2dxActivity{
                 Cocos2dxLuaJavaBridge.releaseLuaFunction(luaFunc);
             }
         });
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                    event.getRepeatCount() == 0) {
+                long uptimeMillis = SystemClock.uptimeMillis();
+                if (uptimeMillis - mLastBackTime > 2000) {
+                    mLastBackTime = uptimeMillis;
+                    showToast(getString(R.string.tip_double_tap_to_exit));
+                    return true;
+                } else {
+                    finish();
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
