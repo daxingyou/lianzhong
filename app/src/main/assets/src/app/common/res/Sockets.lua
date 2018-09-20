@@ -26,7 +26,9 @@ Sockets.connect = {
     -- port = 6003, -- 正式端口号
 
     -- 偎麻雀
-    ip = "wmq.rs.yuelaigame.com", -- 正式ip地址
+	-- ip = "wmq.rs.yuelaigame.com", -- 正式ip地址
+	-- ip = "192.168.31.75", -- 测试ip地址
+	ip = "101.124.66.110", -- 正式ip地址
     port = 6003, -- 正式端口号
 	
 	isReconnect = true, -- 是否重连

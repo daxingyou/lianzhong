@@ -18,7 +18,9 @@ local Https = class("Https")
 -- -- Https.httpUrl = "http://wmq.api.depuju.com/";  -- 域名地址
 
 -- 偎麻雀的地址
-Https.httpUrl = "http://118.24.183.77:8080/qp-api-impl/";  -- 测试地址
+-- Https.httpUrl = "http://192.168.31.75:8080/qp-api-impl/";  -- 测试地址
+Https.httpUrl = "http://101.124.66.110:9080/qp-api-impl/";  -- 正式地址
+--Https.httpUrl = "http://118.24.183.77:8080/qp-api-impl/";  -- 测试地址
 --Https.httpUrl = "http://192.168.31.101:8084/wmq-api-impl/";  -- 测试地址
 -- Https.httpUrl = "http://wmq.api.test.yuelaigame.com/";  -- 临时测试 域名地址
 --Https.httpUrl = "http://wmq.api.yuelaigame.com/";  -- 域名地址  106.14.46.145
