@@ -327,6 +327,8 @@ function HomeScene:ctor()
         if CEnum.AppVersion.gameAlias == CEnum.gameType.hzmj then
             topScale = 0.7
         end
+    elseif CVar._static.NavBarH_Android ~= CEnum.status.NavBarH_def then
+        moveX_title = -CVar._static.NavBarH_Android / 2
     end
 
     -- 标题

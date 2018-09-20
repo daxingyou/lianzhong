@@ -508,7 +508,7 @@ function MainHallScene:ctor()
         :onButtonRelease(function(event)
             event.target:setPositionY(display.cy-9 +moveY_2)
         end)
-        :align(display.CENTER, display.cx-450/2-102/2-100 +moveX_2, display.cy-9 +moveY_2)
+        :align(display.CENTER, display.cx-450/2-102/2 +moveX_2, display.cy-9 +moveY_2)
         :addTo(Layer1)
         :setScale(topScale)
     if CVar._static.appstoreSwitch == CEnum.appstoreSwitch.open then
@@ -551,6 +551,7 @@ function MainHallScene:ctor()
         :align(display.CENTER, display.cx, display.cy-7 +moveY_2)
         :addTo(Layer1)
         :setScale(topScale)
+        :hide()
     --]]
 
     ---[[
@@ -583,7 +584,7 @@ function MainHallScene:ctor()
         :onButtonRelease(function(event)
             event.target:setPositionY(display.cy-0 +moveY_2)
         end)
-        :align(display.CENTER, display.cx+450/2+102/2+100 -moveX_2, display.cy-0 +moveY_2)
+        :align(display.CENTER, display.cx+450/2+102/2 -moveX_2, display.cy-0 +moveY_2)
         :addTo(Layer1)
         :setScale(topScale)
     if CVar._static.appstoreSwitch == CEnum.appstoreSwitch.open then
