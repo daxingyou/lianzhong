@@ -27,14 +27,95 @@ THE SOFTWARE.
 package org.cocos2dx.lua;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
+import org.cocos2dx.lib.Cocos2dxLuaJavaBridge;
+
+import android.app.Activity;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 
 public class AppActivity extends Cocos2dxActivity{
+    public static final String TAG = "Cocos2dxActivity";
+    private static AppActivity mContext;
+    private static double NavigationBarHeight = 0.0d;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+		mContext = this;
+        if (hasNavigationBar(mContext)) {
+            NavigationBarHeight = getNavigationBarHeight(mContext);
+        }
 	}
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mContext = null;
+    }
+
+    public static boolean hasNavigationBar(Activity activity) {
+        Resources rs = activity.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        boolean hasNavBarFun = false;
+        if (id > 0) {
+            hasNavBarFun = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            String navBarOverride = (String) systemPropertiesClass.getMethod("get",
+                    new Class[]{String.class}).invoke(systemPropertiesClass, new Object[]{"qemu.hw.mainkeys"});
+            if ("1".equals(navBarOverride)) {
+                hasNavBarFun = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavBarFun = true;
+            }
+        } catch (Exception e) {
+            hasNavBarFun = false;
+        }
+        Log.i(TAG, "hasNavigationBar: " + hasNavBarFun);
+        return hasNavBarFun;
+    }
+
+    public static double getNavigationBarHeight(Activity activity) {
+        DisplayMetrics dm = new DisplayMetrics();
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        display.getMetrics(dm);
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+        float density = dm.density;
+        Log.i(TAG, "getNavigationBarHeight, screenWidth screenHeight：" + screenWidth + "|" + screenHeight + "|" + density + "|" + dm.densityDpi);
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealMetrics(realDisplayMetrics);
+        } else {
+            try {
+                Class.forName("android.view.Display").getMethod("getRealMetrics",
+                        new Class[]{DisplayMetrics.class}).invoke(display, new Object[]{realDisplayMetrics});
+            } catch (Exception e) {
+                realDisplayMetrics.setToDefaults();
+                e.printStackTrace();
+            }
+        }
+        int screenRealWidth = realDisplayMetrics.widthPixels;
+        Log.i(TAG, "getNavigationBarHeight: screenRealWidth screenRealHeight:" + screenRealWidth + "|" + realDisplayMetrics.heightPixels);
+        return (double) (((float) ((screenRealWidth - screenWidth) * 2)) / density);
+    }
+
+	public static void getNarBarHeight(String content, final int luaFunc) {
+        Log.i(TAG, "getNarBarHeight: param content:" + content);
+        Log.i(TAG, "getNarBarHeight: param luaFunc:" + luaFunc);
+        mContext.runOnGLThread(new Runnable() {
+            public void run() {
+                Cocos2dxLuaJavaBridge.callLuaFunctionWithString(luaFunc, String.valueOf(AppActivity.NavigationBarHeight));
+                Cocos2dxLuaJavaBridge.releaseLuaFunction(luaFunc);
+            }
+        });
+    }
 }

@@ -98,6 +98,8 @@ function EmojiDialog:popDialogBox(_parent, _formView)
         self.alert_gaping_w = self.alert_gaping_w -100
     elseif CVar._static.isIpad then
         self.alert_gaping_w = self.alert_gaping_w -160
+    elseif CVar._static.NavBarH_Android ~= CEnum.status.NavBarH_def then
+        self.alert_gaping_w = self.alert_gaping_w - CVar._static.NavBarH_Android/2
     end
 
     ---[[
